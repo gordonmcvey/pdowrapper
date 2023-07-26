@@ -1,0 +1,40 @@
+{
+  "name": "gordon/pdowrapper",
+  "description": "Wrapper and support classes for improved PDO",
+  "minimum-stability": "stable",
+  "type": "library",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Gordon McVey",
+      "email": "email@example.com"
+    }
+  ],
+  "keywords": [
+    "database",
+    "db",
+    "pdo"
+  ],
+  "require": {
+    "php": ">=8.2.0",
+    "ext-pdo": "*",
+    "psr/log": "^3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6",
+    "monolog/monolog": "^3.3"
+  },
+  "suggest": {
+    "monolog/monolog": "Allows more advanced logging of database activity"
+  },
+  "autoload": {
+    "psr-4": {
+      "gordon\\pdowrapper\\": "src/gordon/pdowrapper"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "gordon\\pdowrapper\\tests\\unit\\": "tests/unit/gordon/pdowrapper"
+    }
+  }
+}
