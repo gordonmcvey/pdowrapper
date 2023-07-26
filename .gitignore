@@ -1,0 +1,4 @@
+/bin/experiments/
+/vendor/
+.idea
+/composer.lock
