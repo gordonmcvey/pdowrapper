@@ -29,13 +29,13 @@ class Random implements IBackoffStrategy
         private ?Randomizer $randomiser = null
     ) {
         if ($clampMin < 1) {
-            throw new \InvalidArgumentException("Minimum clamp value must be positive");
+            throw new ValueError("Minimum clamp value must be positive");
         }
         if ($clampMax < 1) {
-            throw new \InvalidArgumentException("Maximum clamp value must be positive");
+            throw new ValueError("Maximum clamp value must be positive");
         }
         if ($clampMin > $clampMax) {
-            throw new \InvalidArgumentException("Minimum clamp value must be greater than maximum clamp value");
+            throw new ValueError("Minimum clamp value must be greater than maximum clamp value");
         }
     }
 
