@@ -19,8 +19,8 @@ use ValueError;
 class Random implements IBackoffStrategy
 {
     /**
-     * @param int $clampMin
-     * @param int $clampMax
+     * @param int $clampMin Smallest value that can be returned, in microseconds
+     * @param int $clampMax Largest value that can be returned, in microseconds
      * @param Randomizer|null $randomiser Allows you to set a pre-configured Randomizer.  If not specified a default Randomizer will be lazy-instantiated on first call to backoff()
      */
     public function __construct(
