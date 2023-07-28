@@ -18,11 +18,15 @@ use ValueError;
  */
 class Random implements IBackoffStrategy
 {
-    private ?Randomizer $randomiser;
-
+    /**
+     * @param int $clampMin
+     * @param int $clampMax
+     * @param Randomizer|null $randomiser Allows you to set a pre-configured Randomizer.  If not specified a default Randomizer will be lazy-instantiated on first call to backoff()
+     */
     public function __construct(
-        private int $clampMin = 10000,
-        private int $clampMax = 1000000
+        private readonly int $clampMin = 10000,
+        private readonly int $clampMax = 1000000,
+        private ?Randomizer $randomiser = null
     ) {
         if ($clampMin < 1) {
             throw new \InvalidArgumentException("Minimum clamp value must be positive");
