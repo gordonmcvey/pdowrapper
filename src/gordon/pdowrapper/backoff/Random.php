@@ -6,6 +6,7 @@ namespace gordon\pdowrapper\backoff;
 
 use gordon\pdowrapper\interface\backoff\IBackoffStrategy;
 use Random\Randomizer;
+use ValueError;
 
 /**
  * Randomised backoff strategy
@@ -15,7 +16,7 @@ use Random\Randomizer;
  * @package gordon\pdowrapper\backoff
  * @license https://www.apache.org/licenses/LICENSE-2.0
  */
-readonly class Random implements IBackoffStrategy
+class Random implements IBackoffStrategy
 {
     private ?Randomizer $randomiser;
 
@@ -39,9 +40,21 @@ readonly class Random implements IBackoffStrategy
      */
     public function backoff(): int
     {
+        return $this->getRandomiser()->getInt($this->clampMin, $this->clampMax);
+    }
+
+    /**
+     * Get a Randomizer instance
+     *
+     * Protected to allow overriding in unit tests etc
+     *
+     * @return Randomizer
+     */
+    private function getRandomiser(): Randomizer
+    {
         if (null === $this->randomiser) {
             $this->randomiser = new Randomizer();
         }
-        return $this->randomiser->getInt($this->clampMin, $this->clampMax);
+        return $this->randomiser;
     }
 }
