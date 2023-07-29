@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace gordon\pdowrapper\backoff;
 
 use gordon\pdowrapper\interface\backoff\IStatefulBackoffStrategy;
-use InvalidArgumentException;
+use ValueError;
 
 /**
  * Linear backoff strategy
@@ -24,18 +24,19 @@ class Linear implements IStatefulBackoffStrategy
         private readonly int $initialBackoff = 1000,
         private readonly int $factor = 1000,
         private readonly int $clamp = PHP_INT_MAX
-    ) {
+    )
+    {
         if ($initialBackoff < 1) {
-            throw new InvalidArgumentException("Initial backoff value must be positive");
+            throw new ValueError("Initial backoff value must be positive");
         }
         if ($clamp < 1) {
-            throw new InvalidArgumentException("Clamp value must be positive");
+            throw new ValueError("Clamp value must be positive");
         }
         if ($factor < 1) {
-            throw new InvalidArgumentException("Backoff factor must be positive");
+            throw new ValueError("Backoff factor must be positive");
         }
         if ($initialBackoff > $clamp) {
-            throw new InvalidArgumentException("Clamp value must be higher than the initial backoff value");
+            throw new ValueError("Clamp value must be higher than the initial backoff value");
         }
         $this->currentBackoff = $this->initialBackoff;
     }
@@ -46,7 +47,7 @@ class Linear implements IStatefulBackoffStrategy
     public function backoff(): int
     {
         $backoffToReturn = $this->currentBackoff;
-        $this->currentBackoff = (int) min($backoffToReturn + $this->factor, $this->clamp);
+        $this->currentBackoff = (int)min($backoffToReturn + $this->factor, $this->clamp);
         return $backoffToReturn;
     }
 

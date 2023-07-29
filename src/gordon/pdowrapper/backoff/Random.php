@@ -26,8 +26,9 @@ class Random implements IBackoffStrategy
     public function __construct(
         private readonly int $clampMin = 10000,
         private readonly int $clampMax = 1000000,
-        private ?Randomizer $randomiser = null
-    ) {
+        private ?Randomizer  $randomiser = null
+    )
+    {
         if ($clampMin < 1) {
             throw new ValueError("Minimum clamp value must be positive");
         }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace gordon\pdowrapper\backoff;
 
 use gordon\pdowrapper\interface\backoff\IBackoffStrategy;
-use InvalidArgumentException;
+use ValueError;
 
 /**
  * Constant backoff strategy
@@ -17,9 +17,10 @@ use InvalidArgumentException;
  */
 readonly class Constant implements IBackoffStrategy
 {
-    public function __construct(private int $backoffVal) {
+    public function __construct(private int $backoffVal)
+    {
         if ($backoffVal < 1) {
-            throw new InvalidArgumentException("Backoff value must be positive");
+            throw new ValueError("Backoff value must be positive");
         }
     }
 
