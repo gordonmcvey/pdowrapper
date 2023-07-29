@@ -35,7 +35,9 @@ class PDO extends RealPDO implements LoggerAwareInterface
     public function __construct(
         private readonly ConnectionManager $connectionManager,
         private readonly IStatementFactory $statementFactory
-    ) {}
+    )
+    {
+    }
 
     /**
      * @inheritDoc
@@ -180,6 +182,18 @@ class PDO extends RealPDO implements LoggerAwareInterface
     }
 
     /*
+     * The following methods are specific to the CUBRID driver
+     */
+
+    /**
+     * @inheritDoc
+     */
+    public function cubrid_schema(int $schema_type, ?string $table_name, ?string $col_name): array
+    {
+        return $this->connectionManager->getConnection()->cubrid_schema($schema_type, $table_name, $col_name);
+    }
+
+    /*
      * The following methods are specific to the SQLite driver
      */
 
@@ -188,7 +202,36 @@ class PDO extends RealPDO implements LoggerAwareInterface
      *
      * We STRONGLY discourage use of this method as it's marked as experimental in the PHP documentation, and honestly
      * I have no idea what they were even thinking to include a method specific to a particular DB in what's supposed to
-     * be a generic DB interface class.
+     * be a generic DB interface class.  It's only included here for completeness
+     */
+    public function sqliteCreateAggregate(
+        string   $function_name,
+        callable $step_func,
+        callable $finalize_func,
+        ?int     $num_args = 0
+    ): bool
+    {
+        return $this->connectionManager->getConnection()->sqliteCreateAggregate($function_name, $step_func, $finalize_func, $num_args);
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * We STRONGLY discourage use of this method as it's marked as experimental in the PHP documentation, and honestly
+     * I have no idea what they were even thinking to include a method specific to a particular DB in what's supposed to
+     * be a generic DB interface class.  It's only included here for completeness
+     */
+    public function sqliteCreateCollation(string $name, callable $callback): bool
+    {
+        return $this->connectionManager->getConnection()->sqliteCreateCollation($name, $callback);
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * We STRONGLY discourage use of this method as it's marked as experimental in the PHP documentation, and honestly
+     * I have no idea what they were even thinking to include a method specific to a particular DB in what's supposed to
+     * be a generic DB interface class.  It's only included here for completeness
      */
     public function sqliteCreateFunction($function_name, $callback, $num_args = -1, $flags = 0): bool
     {
