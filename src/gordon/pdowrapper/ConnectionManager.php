@@ -8,6 +8,7 @@ use gordon\pdowrapper\interface\factory\IConnectionFactory;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use ValueError;
 
 /**
  * Class ConnectionManager
@@ -22,30 +23,53 @@ class ConnectionManager implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
+     * List of PDO attributes that the user is not allowed to override
+     */
+    private const FIXED_ATTRIBS = [
+        PDO::ATTR_EMULATE_PREPARES  => false,
+        PDO::ATTR_ERRMODE           => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_STRINGIFY_FETCHES => false,
+    ];
+
+    /**
+     * List of default values for PDO attributes
+     */
+    private const DEFAULT_ATTRIBS = [
+        PDO::ATTR_CASE => PDO::CASE_NATURAL,
+    ];
+
+    /**
      * The connection being managed by the manager
      *
      * @var PDO|null
      */
     private ?PDO $connection = null;
 
-    private array $attributes = [];
+    /**
+     * Set of attributes that will be applied to new connections via setAttribute()
+     *
+     * @var array<int, mixed>
+     */
+    private array $attributes;
 
     /**
      * @param IConnectionFactory $connectionFactory The class that will handle PDO instantiation
      */
-    public function __construct(private readonly IConnectionFactory $connectionFactory) {}
+    public function __construct(private readonly IConnectionFactory $connectionFactory)
+    {
+        $this->attributes = array_merge(self::FIXED_ATTRIBS, self::DEFAULT_ATTRIBS);
+    }
 
     /**
      * Return the PDO object that's actually communicating with the database, or instantiate it if the connection is not
      * established
      *
-     * @param array|null $attributes
      * @return PDO
      */
-    public function getConnection(?array $attributes = []): PDO
+    public function getConnection(): PDO
     {
         if (null === $this->connection) {
-            $this->initConnection($attributes);
+            $this->initConnection();
         } else {
             $this->logger?->debug(sprintf("%s: Connection already established, reusing reference", __METHOD__));
         }
@@ -93,12 +117,26 @@ class ConnectionManager implements LoggerAwareInterface
         return null !== $this->connection;
     }
 
+    /**
+     * @param int $attribute
+     * @param mixed $value
+     * @return bool
+     * @throws ValueError
+     */
     public function setAttribute(int $attribute, mixed $value): bool
     {
+        if (isset(self::FIXED_ATTRIBS[$attribute])) {
+            throw new ValueError("You cannot override attribute $attribute");
+        }
+
         $this->attributes[$attribute] = $value;
         return $this->connection?->setAttribute($attribute, $value) ?? true;
     }
 
+    /**
+     * @param int $attribute
+     * @return mixed
+     */
     public function getAttribute(int $attribute): mixed
     {
         return $this->connection?->getAttribute($attribute) ?? $this->attributes[$attribute] ?? null;
