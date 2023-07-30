@@ -7,6 +7,12 @@ namespace gordon\pdowrapper\dsn\mysql;
 use gordon\pdowrapper\dsn\DSN as AbstractDSN;
 use ValueError;
 
+/**
+ * DSN for MySQL connections
+ *
+ * @package gordon\pdowrapper\dsn\mysql
+ * @license https://www.apache.org/licenses/LICENSE-2.0
+ */
 final class DSN extends AbstractDSN
 {
     private const DRIVER_PREFIX = "mysql";
@@ -15,6 +21,14 @@ final class DSN extends AbstractDSN
 
     private const PORT_MAX = 65535;
 
+    /**
+     * @param string|null $host
+     * @param int|null $port
+     * @param string|null $dbName
+     * @param string|null $socket
+     * @param string|null $charset
+     * @throws ValueError
+     */
     public function __construct(
         ?string $host    = null,
         ?int    $port    = null,
