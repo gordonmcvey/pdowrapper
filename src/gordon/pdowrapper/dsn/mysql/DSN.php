@@ -17,10 +17,6 @@ final class DSN extends AbstractDSN
 {
     private const DRIVER_PREFIX = "mysql";
 
-    private const PORT_MIN = 1;
-
-    private const PORT_MAX = 65535;
-
     /**
      * @param string|null $host
      * @param int|null $port
@@ -46,17 +42,15 @@ final class DSN extends AbstractDSN
             throw new ValueError("Port cannot be specified for a UNIX socket");
         }
 
-        if (null !== $port && ($port < self::PORT_MIN || $port > self::PORT_MAX)) {
-            throw new ValueError(sprintf("Port must have a value between %d and %d", self::PORT_MIN, self::PORT_MAX));
-        }
+        $this->validatePort($port);
 
         // DSN initialisation
-        parent::__construct(self::DRIVER_PREFIX . ":" . implode(";", array_filter([
-            $host ? sprintf(self::ELEMENT_TEMPLATE, "host", $host) : null,
-            $port ? sprintf(self::ELEMENT_TEMPLATE, "port", $port) : null,
-            $socket ? sprintf(self::ELEMENT_TEMPLATE, "unix_socket", $socket) : null,
-            $dbName ? sprintf(self::ELEMENT_TEMPLATE, "dbname", $dbName) : null,
-            $charset ? sprintf(self::ELEMENT_TEMPLATE, "charset", $charset) : null,
-        ])));
+        parent::__construct(self::DRIVER_PREFIX . ":" . $this->buildParamString([
+            "host"        => $host,
+            "port"        => $port,
+            "unix_socket" => $socket,
+            "dbname"      => $dbName,
+            "charset"     => $charset
+        ]));
     }
 }
