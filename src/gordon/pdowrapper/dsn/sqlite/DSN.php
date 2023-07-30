@@ -13,7 +13,7 @@ use gordon\pdowrapper\dsn\DSN as AbstractDSN;
  * @license https://www.apache.org/licenses/LICENSE-2.0
  * @group dsn
  */
-class DSN extends AbstractDSN
+final class DSN extends AbstractDSN
 {
     private const DRIVER_PREFIX = "sqlite";
 
