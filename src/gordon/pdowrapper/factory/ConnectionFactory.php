@@ -30,7 +30,7 @@ class ConnectionFactory implements IConnectionFactory, LoggerAwareInterface
     {
         $this->logger?->debug(sprintf("%s: Connecting to DSN %s", __METHOD__, $this->spec->dsn));
         $pdo = new $this->spec->pdoClass(
-            $this->spec->dsn,
+            (string) $this->spec->dsn,
             $this->spec->userName,
             $this->spec->password,
             $this->spec->options
