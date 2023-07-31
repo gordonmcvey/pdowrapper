@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:disable Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint
+
 declare(strict_types=1);
 
 namespace gordon\pdowrapper;
@@ -16,8 +18,8 @@ use ValueError;
 /**
  * Class PDO
  *
- * Class responsibilities: Provide a front-end for the PDO wrapper that can be used as a drop-in replacement for a regular
- * PDO instance
+ * Class responsibilities: Provide a front-end for the PDO wrapper that can be used as a drop-in replacement for a
+ * regular PDO instance
  *
  * @package gordon\pdowrapper
  * @license https://www.apache.org/licenses/LICENSE-2.0
@@ -35,8 +37,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
     public function __construct(
         private readonly ConnectionManager $connectionManager,
         private readonly IStatementFactory $statementFactory
-    )
-    {
+    ) {
     }
 
     /**
@@ -115,7 +116,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
 
     /**
      * @inheritDoc
-     * @todo This should only execute when connected and in a transaction, otherwise it should just clear the statement list
+     * @todo This should only fire when connected and in a transaction, otherwise it should clear the statement list
      */
     public function rollBack(): bool
     {
@@ -188,10 +189,12 @@ class PDO extends RealPDO implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
+    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function cubrid_schema(int $schema_type, ?string $table_name, ?string $col_name): array
     {
         return $this->connectionManager->getConnection()->cubrid_schema($schema_type, $table_name, $col_name);
     }
+    // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 
     /*
      * The following methods are specific to the SQLite driver
@@ -209,9 +212,10 @@ class PDO extends RealPDO implements LoggerAwareInterface
         callable $step_func,
         callable $finalize_func,
         ?int     $num_args = 0
-    ): bool
-    {
-        return $this->connectionManager->getConnection()->sqliteCreateAggregate($function_name, $step_func, $finalize_func, $num_args);
+    ): bool {
+        return $this->connectionManager
+            ->getConnection()
+            ->sqliteCreateAggregate($function_name, $step_func, $finalize_func, $num_args);
     }
 
     /**
@@ -235,7 +239,9 @@ class PDO extends RealPDO implements LoggerAwareInterface
      */
     public function sqliteCreateFunction($function_name, $callback, $num_args = -1, $flags = 0): bool
     {
-        return $this->connectionManager->getConnection()->sqliteCreateFunction($function_name, $callback, $num_args, $flags);
+        return $this->connectionManager
+            ->getConnection()
+            ->sqliteCreateFunction($function_name, $callback, $num_args, $flags);
     }
 
     /*
@@ -245,33 +251,58 @@ class PDO extends RealPDO implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyFromArray(string $tableName, array $rows, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): bool
-    {
-        return $this->connectionManager->getConnection()->pgsqlCopyFromArray($tableName, $rows, $separator, $nullAs, $fields);
+    public function pgsqlCopyFromArray(
+        string $tableName,
+        array $rows,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): bool {
+        return $this->connectionManager
+            ->getConnection()
+            ->pgsqlCopyFromArray($tableName, $rows, $separator, $nullAs, $fields);
     }
 
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyFromFile(string $tableName, string $filename, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): bool
-    {
-        return $this->connectionManager->getConnection()->pgsqlCopyFromFile($tableName, $filename, $separator, $nullAs, $fields);
+    public function pgsqlCopyFromFile(
+        string $tableName,
+        string $filename,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): bool {
+        return $this->connectionManager
+            ->getConnection()
+            ->pgsqlCopyFromFile($tableName, $filename, $separator, $nullAs, $fields);
     }
 
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyToArray(string $tableName, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): array|false
-    {
+    public function pgsqlCopyToArray(
+        string $tableName,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): array|false {
         return $this->connectionManager->getConnection()->pgsqlCopyToArray($tableName, $separator, $nullAs, $fields);
     }
 
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyToFile(string $tableName, string $filename, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): bool
-    {
-        return $this->connectionManager->getConnection()->pgsqlCopyToFile($tableName, $filename, $separator, $nullAs, $fields);
+    public function pgsqlCopyToFile(
+        string $tableName,
+        string $filename,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): bool {
+        return $this->connectionManager
+            ->getConnection()
+            ->pgsqlCopyToFile($tableName, $filename, $separator, $nullAs, $fields);
     }
 
     /**
@@ -303,7 +334,9 @@ class PDO extends RealPDO implements LoggerAwareInterface
      */
     public function pgsqlGetNotify(int $fetchMode = \PDO::FETCH_DEFAULT, int $timeoutMilliseconds = 0): array|false
     {
-        return $this->connectionManager->getConnectionIfConnected()?->pgsqlGetNotify($fetchMode, $timeoutMilliseconds) ?? false;
+        return $this->connectionManager
+            ->getConnectionIfConnected()
+            ?->pgsqlGetNotify($fetchMode, $timeoutMilliseconds) ?? false;
     }
 
     /**
