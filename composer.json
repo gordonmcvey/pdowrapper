@@ -48,8 +48,8 @@
     "all": [
       "@unittest",
       "@phpcs",
-      "lint",
-      "static"
+      "@lint",
+      "@static"
     ]
   }
 }
