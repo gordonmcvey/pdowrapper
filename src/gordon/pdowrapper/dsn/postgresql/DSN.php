@@ -29,17 +29,17 @@ final class DSN extends AbstractDSN
      * @param string|null $dbName
      * @param string|null $user
      * @param string|null $password
-     * @param string|null $sslmode
+     * @param string|null $sslMode
      * @throws ValueError
      * @todo $sslmode is not well documented, maybe better implemented as an enum?
      */
     public function __construct(
         string  $host,
-        ?int    $port,
-        ?string $dbName,
-        ?string $user,
-        ?string $password,
-        ?string $sslmode
+        ?int    $port = null,
+        ?string $dbName = null,
+        ?string $user = null,
+        ?string $password = null,
+        ?string $sslMode = null
     )
     {
         // Input validation
@@ -52,7 +52,7 @@ final class DSN extends AbstractDSN
             "dbname"   => $dbName,
             "user"     => $user,
             "password" => $password,
-            "sslmode"  => $sslmode,
+            "sslmode"  => $sslMode,
         ]));
     }
 }
