@@ -41,15 +41,15 @@
     }
   },
   "scripts": {
-    "unittest": "vendor/bin/phpunit ./tests/unit",
-    "phpcs": "vendor/bin/phpcs -p --standard=psr12 --extensions=php ./bin ./src",
-    "lint": "vendor/bin/phplint --exclude=vendor --extensions=php . ",
-    "static": "vendor/bin/phpstan analyse --level=7 ./src",
+    "unittest": "vendor/bin/phpunit",
+    "phpcs": "vendor/bin/phpcs -ps --standard=psr12 --extensions=php",
+    "lint": "vendor/bin/phplint --exclude=vendor --extensions=php ",
+    "static": "vendor/bin/phpstan analyse --level=7",
     "all": [
-      "@unittest",
-      "@phpcs",
-      "@lint",
-      "@static"
+      "@unittest ./tests/unit",
+      "@phpcs ./bin ./src",
+      "@lint ./bin ./src",
+      "@static ./bin ./src"
     ]
   }
 }
