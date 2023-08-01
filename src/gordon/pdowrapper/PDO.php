@@ -82,7 +82,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
      * @inheritDoc
      * @throws ValueError
      */
-    public function prepare(string $query, array $options = []): PDOStatement|false
+    public function prepare(string $query, array $options = []): PDOStatement
     {
         return $this->statementFactory->prepare($query, $options);
     }

@@ -30,7 +30,7 @@ final class ErrorCodeFactory implements IErrorCodeFactory
         }
 
         $className = sprintf(self::DRIVER_TEMPLATE, strtolower($dbType));
-        $this->instance = new $className;
+        $this->instance = new $className();
     }
 
     /**
@@ -46,6 +46,6 @@ final class ErrorCodeFactory implements IErrorCodeFactory
      */
     public function fromCode(int|string $code): IErrorCodeEnum
     {
-       return $this->instance->fromCode($code);
+        return $this->instance->fromCode($code);
     }
 }

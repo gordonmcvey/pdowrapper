@@ -21,7 +21,7 @@ interface IStatementFactory
      *
      * @param string $query
      * @param array<\PDO::ATTR_*, int> $options
-     * @return PDOStatement|false
+     * @return PDOStatement
      */
-    public function prepare(string $query, array $options = []): PDOStatement|false;
+    public function prepare(string $query, array $options = []): PDOStatement;
 }

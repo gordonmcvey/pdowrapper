@@ -151,8 +151,13 @@ class LoggingPDO extends \PDO implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyFromArray(string $tableName, array $rows, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): bool
-    {
+    public function pgsqlCopyFromArray(
+        string $tableName,
+        array $rows,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): bool {
         $this->logger?->debug(__METHOD__);
         return parent::pgsqlCopyFromArray($tableName, $rows, $separator, $nullAs, $fields);
     }
@@ -160,8 +165,13 @@ class LoggingPDO extends \PDO implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyFromFile(string $tableName, string $filename, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): bool
-    {
+    public function pgsqlCopyFromFile(
+        string $tableName,
+        string $filename,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): bool {
         $this->logger?->debug(__METHOD__);
         return parent::pgsqlCopyFromFile($tableName, $filename, $separator, $nullAs, $fields);
     }
@@ -169,8 +179,12 @@ class LoggingPDO extends \PDO implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyToArray(string $tableName, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): array|false
-    {
+    public function pgsqlCopyToArray(
+        string $tableName,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): array|false {
         $this->logger?->debug(__METHOD__);
         return parent::pgsqlCopyToArray($tableName, $separator, $nullAs, $fields);
     }
@@ -178,8 +192,13 @@ class LoggingPDO extends \PDO implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function pgsqlCopyToFile(string $tableName, string $filename, string $separator = "\t", string $nullAs = "\\\\N", ?string $fields = null): bool
-    {
+    public function pgsqlCopyToFile(
+        string $tableName,
+        string $filename,
+        string $separator = "\t",
+        string $nullAs = "\\\\N",
+        ?string $fields = null
+    ): bool {
         $this->logger?->debug(__METHOD__);
         return parent::pgsqlCopyToFile($tableName, $filename, $separator, $nullAs, $fields);
     }

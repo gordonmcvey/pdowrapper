@@ -39,8 +39,8 @@ class PDOException extends BasePDOException
          *
          * But, in their infinite wisdom, the PHP group decided to allow for an exception's state to be mutable!  Why
          * is this allowed?  No idea, an exception should be immutable once created as we could mess with it in ways we
-         * shouldn't.  But in this case we can use it to work around the PHP typing rules and have our custom PDOException
-         * behave just like the in-built PDOException.
+         * shouldn't.  But in this case we can use it to work around the PHP typing rules and have our custom
+         * PDOException behave just like the in-built PDOException.
          */
         $this->code = $code;
     }

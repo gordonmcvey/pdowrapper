@@ -12,7 +12,7 @@ use ValueError;
  *
  * @package gordon\pdowrapper\dsn
  * @license https://www.apache.org/licenses/LICENSE-2.0
- * @todo PHPUnit can't mock readonly classes yet, update this class to be read-only if/when mocking them becomes possible
+ * @todo PHPUnit can't mock readonly classes yet, update to be read-only if/when mocking them becomes possible
  */
 abstract class DSN implements Stringable
 {
@@ -28,7 +28,7 @@ abstract class DSN implements Stringable
      */
     public function __construct(private readonly string $dsnString)
     {
-        if (empty ($dsnString)) {
+        if (empty($dsnString)) {
             throw new ValueError("DSN cannot be empty");
         }
     }

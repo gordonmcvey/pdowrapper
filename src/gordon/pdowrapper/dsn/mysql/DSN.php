@@ -26,13 +26,12 @@ final class DSN extends AbstractDSN
      * @throws ValueError
      */
     public function __construct(
-        ?string $host    = null,
-        ?int    $port    = null,
-        ?string $dbName  = null,
-        ?string $socket  = null,
+        ?string $host = null,
+        ?int    $port = null,
+        ?string $dbName = null,
+        ?string $socket = null,
         ?string $charset = null
-    )
-    {
+    ) {
         // Input validation
         if (!($host xor $socket)) {
             throw new ValueError("Must specify a host or a socket, but cannot specify both");

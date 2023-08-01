@@ -40,8 +40,7 @@ final class DSN extends AbstractDSN
         ?string $user = null,
         ?string $password = null,
         ?string $sslMode = null
-    )
-    {
+    ) {
         // Input validation
         $this->validatePort($port);
 

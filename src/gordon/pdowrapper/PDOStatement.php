@@ -90,7 +90,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     private array $boundValues = [];
 
     /**
-     * @param ConnectionManager $connectionManager Must return a \PDO instance and not a wrapper, or we risk an infinite recursion
+     * @param ConnectionManager $connectionManager Must return a \PDO instance and not a wrapper
      * @param string $query The query that will be prepared when instantiating the proxied statement
      * @param array<PDO::ATTR_*, int> $options The options that will be used when instantiating the proxied statement
      */
@@ -128,8 +128,11 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function fetch(int $mode = PDO::FETCH_BOTH, int $cursorOrientation = PDO::FETCH_ORI_NEXT, int $cursorOffset = 0): mixed
-    {
+    public function fetch(
+        int $mode = PDO::FETCH_BOTH,
+        int $cursorOrientation = PDO::FETCH_ORI_NEXT,
+        int $cursorOffset = 0
+    ): mixed {
         try {
             return $this->statement?->fetch($mode, $cursorOrientation, $cursorOffset) ?? false;
         } catch (BasePDOException $e) {
@@ -140,8 +143,13 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function bindParam(int|string $param, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool
-    {
+    public function bindParam(
+        int|string $param,
+        mixed &$var,
+        int $type = PDO::PARAM_STR,
+        int $maxLength = null,
+        mixed $driverOptions = null
+    ): bool {
         $this->boundParams[$param]  = [
             "param"         => $param,
             "var"           => &$var,
@@ -159,8 +167,13 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function bindColumn(int|string $column, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool
-    {
+    public function bindColumn(
+        int|string $column,
+        mixed &$var,
+        int $type = PDO::PARAM_STR,
+        int $maxLength = null,
+        mixed $driverOptions = null
+    ): bool {
         $this->boundColumns[$column] = [
             "column"        => $column,
             "var"           => &$var,
@@ -371,11 +384,23 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
             }
 
             foreach ($this->boundColumns as $column) {
-                $statement->bindColumn($column["column"], $column["var"], $column["type"], $column["maxLength"], $column["driverOptions"]);
+                $statement->bindColumn(
+                    $column["column"],
+                    $column["var"],
+                    $column["type"],
+                    $column["maxLength"],
+                    $column["driverOptions"]
+                );
             }
 
             foreach ($this->boundParams as $param) {
-                $statement->bindParam($param["param"], $param["var"], $param["type"], $param["maxLength"], $param["driverOptions"]);
+                $statement->bindParam(
+                    $param["param"],
+                    $param["var"],
+                    $param["type"],
+                    $param["maxLength"],
+                    $param["driverOptions"]
+                );
             }
 
             foreach ($this->boundValues as $value) {
