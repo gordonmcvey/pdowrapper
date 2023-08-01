@@ -24,8 +24,7 @@ class Linear implements IStatefulBackoffStrategy
         private readonly int $initialBackoff = 1000,
         private readonly int $factor = 1000,
         private readonly int $clamp = PHP_INT_MAX
-    )
-    {
+    ) {
         if ($initialBackoff < 1) {
             throw new ValueError("Initial backoff value must be positive");
         }
@@ -47,7 +46,7 @@ class Linear implements IStatefulBackoffStrategy
     public function backoff(): int
     {
         $backoffToReturn = $this->currentBackoff;
-        $this->currentBackoff = (int)min($backoffToReturn + $this->factor, $this->clamp);
+        $this->currentBackoff = (int) min($backoffToReturn + $this->factor, $this->clamp);
         return $backoffToReturn;
     }
 

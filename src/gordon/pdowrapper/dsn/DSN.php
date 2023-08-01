@@ -50,7 +50,8 @@ abstract class DSN implements Stringable
      * @return void
      * @throws ValueError
      */
-    protected function validatePort(?int $port) {
+    protected function validatePort(?int $port)
+    {
         if (null !== $port && ($port < self::PORT_MIN || $port > self::PORT_MAX)) {
             throw new ValueError(sprintf("Port must have a value between %d and %d", self::PORT_MIN, self::PORT_MAX));
         }

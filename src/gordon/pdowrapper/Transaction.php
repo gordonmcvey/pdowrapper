@@ -14,10 +14,10 @@ namespace gordon\pdowrapper;
  *       the last execution of query A needs to be made available in a way query B can refer to
  * * Allow for replay of the last query/transaction in the event of a transient error
  * * Allow for retrieval of relevant results for the consuming process
- * * Do some sort of checks for things that can't be run inside transactions? (eg DDL commands on MySQL implicitly commit
- *   any open transactions, and it will behave as if not in a transaction if working with storage engines that don't
- *   support transactions).  This may be a bit too much of a stretch though, and we probably should just rely on the
- *   developer using this to know what they can and can't run inside a transaction
+ * * Do some sort of checks for things that can't be run inside transactions? (eg DDL commands on MySQL implicitly
+ *   commit any open transactions, and it will behave as if not in a transaction if working with storage engines that
+ *   don't support transactions).  This may be a bit too much of a stretch though, and we probably should just rely on
+ *   the developer using this to know what they can and can't run inside a transaction
  *
  * @package gordon\pdowrapper
  * @license https://www.apache.org/licenses/LICENSE-2.0
@@ -39,11 +39,11 @@ class Transaction
         return $this;
     }
 
-    public function run(): static
-    {
-        foreach ($this->queries as $query) {
-
-        }
-        return $this;
-    }
+//    public function run(): static
+//    {
+//        foreach ($this->queries as $query) {
+//
+//        }
+//        return $this;
+//    }
 }

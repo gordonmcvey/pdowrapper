@@ -19,7 +19,9 @@ class ConnectionFactory implements IConnectionFactory, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public function __construct(private readonly ConnectionSpec $spec) {}
+    public function __construct(private readonly ConnectionSpec $spec)
+    {
+    }
 
     /**
      * @inheritDoc

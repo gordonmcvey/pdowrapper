@@ -21,14 +21,13 @@ class Random implements IBackoffStrategy
     /**
      * @param int $clampMin Smallest value that can be returned, in microseconds
      * @param int $clampMax Largest value that can be returned, in microseconds
-     * @param Randomizer|null $randomiser Allows you to set a pre-configured Randomizer.  If not specified a default Randomizer will be lazy-instantiated on first call to backoff()
+     * @param Randomizer|null $randomiser Randomizer to use. If not specified default values will be used
      */
     public function __construct(
         private readonly int $clampMin = 10000,
         private readonly int $clampMax = 1000000,
         private ?Randomizer  $randomiser = null
-    )
-    {
+    ) {
         if ($clampMin < 1) {
             throw new ValueError("Minimum clamp value must be positive");
         }

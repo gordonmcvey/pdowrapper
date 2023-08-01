@@ -21,7 +21,8 @@ class StatementFactory implements LoggerAwareInterface, IStatementFactory
 
     public function __construct(
         private readonly ConnectionManager $connectionManager
-    ) {}
+    ) {
+    }
 
     /**
      * @inheritDoc

@@ -24,8 +24,7 @@ class Exponential implements IStatefulBackoffStrategy
         private readonly int   $initialBackoff = 1000,
         private readonly float $factor = 1.1,
         private readonly int   $clamp = PHP_INT_MAX
-    )
-    {
+    ) {
         if ($initialBackoff < 1) {
             throw new ValueError("Initial backoff value must be positive");
         }

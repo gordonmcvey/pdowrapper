@@ -29,8 +29,7 @@ class RetryableConnectionFactory extends ConnectionFactory
     {
         $attempt = 1;
 
-        while(true)
-        {
+        while (true) {
             $this->logger?->debug(sprintf("%s: Connection attempt %d of %d", __METHOD__, $attempt, $this->maxAttempts));
             try {
                 // The return will escape the loop
