@@ -41,7 +41,7 @@ class CachingStatementFactory extends StatementFactory
     /**
      * @inheritDoc
      */
-    public function prepare(string $query, array $options = []): PDOStatement|false
+    public function prepare(string $query, array $options = []): PDOStatement
     {
         /*
          * Normalise and hash the given SQL query string

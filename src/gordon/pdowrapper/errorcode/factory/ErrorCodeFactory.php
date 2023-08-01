@@ -6,6 +6,7 @@ namespace gordon\pdowrapper\errorcode\factory;
 
 use gordon\pdowrapper\interface\errorcode\factory\IErrorCodeFactory;
 use gordon\pdowrapper\interface\errorcode\IErrorCodeEnum;
+use http\Exception\RuntimeException;
 use PDOException;
 use ValueError;
 
@@ -30,7 +31,12 @@ final class ErrorCodeFactory implements IErrorCodeFactory
         }
 
         $className = sprintf(self::DRIVER_TEMPLATE, strtolower($dbType));
-        $this->instance = new $className();
+        $instance = new $className();
+        if (!$instance instanceof IErrorCodeFactory) {
+            // @todo Better error handling
+            throw new RuntimeException("Instantiated class doesn't implement IErrorCodeFactory");
+        }
+        $this->instance = $instance;
     }
 
     /**
