@@ -6,6 +6,7 @@
     <config name="show_warnings" value="0"/>
 
     <rule ref="PSR12">
+        <!-- We want to have multi-line type hints lined up -->
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint"/>
     </rule>
 
