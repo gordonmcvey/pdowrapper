@@ -81,6 +81,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
     /**
      * @inheritDoc
      * @throws ValueError
+     * @phpstan-ignore-next-line
      */
     public function prepare(string $query, array $options = []): PDOStatement
     {
@@ -146,6 +147,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
 
     /**
      * @inheritDoc
+     * @phpstan-ignore-next-line
      */
     public function errorInfo(): array
     {
@@ -236,6 +238,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
 
     /**
      * @inheritDoc
+     * @phpstan-ignore-next-line
      */
     public function pgsqlCopyFromArray(
         string $tableName,
@@ -266,6 +269,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
 
     /**
      * @inheritDoc
+     * @phpstan-ignore-next-line
      */
     public function pgsqlCopyToArray(
         string $tableName,
@@ -317,6 +321,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
 
     /**
      * @inheritDoc
+     * @phpstan-ignore-next-line
      */
     public function pgsqlGetNotify(int $fetchMode = \PDO::FETCH_DEFAULT, int $timeoutMilliseconds = 0): array|false
     {

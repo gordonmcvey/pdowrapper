@@ -18,7 +18,7 @@ final readonly class ConnectionSpec
      * @param DSN $dsn
      * @param string|null $userName
      * @param string|null $password
-     * @param array|null $options
+     * @param array<int, scalar>|null $options
      * @param string|null $pdoClass
      */
     public function __construct(
