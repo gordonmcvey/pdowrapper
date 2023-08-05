@@ -7,6 +7,7 @@ namespace gordon\pdowrapper;
 use gordon\pdowrapper\exception\PDOException;
 use Iterator;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Internal\TentativeType;
 use PDO;
 use PDOException as BasePDOException;
 use PDOStatement as RealPDOStatement;
@@ -43,7 +44,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
      * As this is intended to be used as variable-length parameter list for when the real setFetchMode() is called we
      * can make no type hints about it other than it being an array.
      *
-     * @var array
+     * @var array<int|string, scalar>
      */
     private array $fetchParams = [];
 
@@ -59,8 +60,8 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
      *     column:int|string,
      *     var:mixed,
      *     type:int|null,
-     *     maxLength: int|null,
-     *     driverOptions: mixed|null
+     *     maxLength:int|null,
+     *     driverOptions:mixed|null
      * }>
      */
     private array $boundColumns = [];
@@ -108,6 +109,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     /**
      * @inheritDoc
      * @throws PDOException
+     * @phpstan-ignore-next-line
      */
     public function execute(?array $params = null): bool
     {
@@ -178,7 +180,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
             "column"        => $column,
             "var"           => &$var,
             "type"          => $type,
-            "macLength"     => $maxLength,
+            "maxLength"     => $maxLength,
             "driverOptions" => $driverOptions,
         ];
         try {
@@ -231,6 +233,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
 
     /**
      * @inheritDoc
+     * @return array<int, mixed>
      */
     public function fetchAll(int $mode = PDO::FETCH_BOTH, ...$args): array
     {
@@ -263,8 +266,8 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
 
     /**
      * @inheritDoc
+     * @return array<int|string|null>
      */
-    #[ArrayShape([0 => "string", 1 => "int", 2 => "string"])]
     public function errorInfo(): array
     {
         return $this->statement?->errorInfo() ?? ["00000", null, null];
@@ -299,16 +302,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
      * @inheritDoc
      * @todo Implement getColumnMeta
      */
-    #[ArrayShape([
-        "name"          => "string",
-        "len"           => "int",
-        "precision"     => "int",
-        "oci:decl_type" => "int|string",
-        "native_type"   => "string",
-        "scale"         => "int",
-        "flags"         => "array",
-        "pdo_type"      => "int"
-    ])] public function getColumnMeta(int $column): array|false
+    public function getColumnMeta(int $column): array|false
     {
         return $this->statement?->getColumnMeta($column) ?? false;
     }
@@ -348,7 +342,9 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
      */
     public function debugDumpParams(): ?bool
     {
-        return $this->statement?->debugDumpParams() ?? null;
+        $this->statement?->debugDumpParams();
+        // Satisfy PHPStan until a better way is found
+        return null;
     }
 
     /**
@@ -362,6 +358,8 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
         if (null === $this->statement) {
             $this->initStatement();
         }
+
+        /* @phpstan-ignore-next-line */
         return $this->statement->getIterator();
     }
 

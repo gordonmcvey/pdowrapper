@@ -183,20 +183,6 @@ class PDO extends RealPDO implements LoggerAwareInterface
     }
 
     /*
-     * The following methods are specific to the CUBRID driver
-     */
-
-    /**
-     * @inheritDoc
-     */
-    // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function cubrid_schema(int $schema_type, ?string $table_name, ?string $col_name): array
-    {
-        return $this->connectionManager->getConnection()->cubrid_schema($schema_type, $table_name, $col_name);
-    }
-    // phpcs:enable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-
-    /*
      * The following methods are specific to the SQLite driver
      */
 
@@ -208,10 +194,10 @@ class PDO extends RealPDO implements LoggerAwareInterface
      * be a generic DB interface class.  It's only included here for completeness
      */
     public function sqliteCreateAggregate(
-        string   $function_name,
-        callable $step_func,
-        callable $finalize_func,
-        ?int     $num_args = 0
+        $function_name,
+        $step_func,
+        $finalize_func,
+        $num_args = null
     ): bool {
         return $this->connectionManager
             ->getConnection()
@@ -225,7 +211,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
      * I have no idea what they were even thinking to include a method specific to a particular DB in what's supposed to
      * be a generic DB interface class.  It's only included here for completeness
      */
-    public function sqliteCreateCollation(string $name, callable $callback): bool
+    public function sqliteCreateCollation($name, $callback): bool
     {
         return $this->connectionManager->getConnection()->sqliteCreateCollation($name, $callback);
     }
