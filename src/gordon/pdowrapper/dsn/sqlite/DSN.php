@@ -25,6 +25,7 @@ final class DSN extends AbstractDSN
 
     /**
      * SQLite can operate in one of 3 modes:
+     *
      * * File: Specify the full path to the database file
      * * Memory: Specify MODE_MEMORY
      * * Temp file: Specify MODE_TEMP or an empty path string
