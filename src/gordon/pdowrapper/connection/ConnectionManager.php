@@ -57,7 +57,7 @@ class ConnectionManager implements LoggerAwareInterface
      */
     public function __construct(private readonly IConnectionFactory $connectionFactory)
     {
-        $this->attributes = array_merge(self::FIXED_ATTRIBS, self::DEFAULT_ATTRIBS);
+        $this->attributes = array_replace(self::DEFAULT_ATTRIBS, self::FIXED_ATTRIBS,);
     }
 
     /**
