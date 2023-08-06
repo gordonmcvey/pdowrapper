@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace gordon\pdowrapper\factory;
 
 use gordon\pdowrapper\connection\ConnectionSpec;
+use gordon\pdowrapper\exception\InstantiationException;
+use gordon\pdowrapper\exception\PDOException;
 use gordon\pdowrapper\interface\factory\IConnectionFactory;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
@@ -32,12 +34,16 @@ class ConnectionFactory implements IConnectionFactory, LoggerAwareInterface
     public function get(): PDO
     {
         $this->logger?->debug(sprintf("%s: Connecting to DSN %s", __METHOD__, $this->spec->dsn));
-        $pdo = new $this->spec->pdoClass(
-            (string) $this->spec->dsn,
-            $this->spec->userName,
-            $this->spec->password,
-            $this->spec->options
-        );
+        try {
+            $pdo = new $this->spec->pdoClass(
+                (string) $this->spec->dsn,
+                $this->spec->userName,
+                $this->spec->password,
+                $this->spec->options
+            );
+        } catch (\PDOException $e) {
+            throw InstantiationException::fromException($e);
+        }
 
         // Protection against instantiating a non-PDO class
         if (!$pdo instanceof PDO) {

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\interface\factory;
 
+use gordon\pdowrapper\exception\InstantiationException;
 use PDO;
 use PDOException;
+use TypeError;
 
 /**
  * Interface ConnectionFactoryInterface
@@ -27,6 +29,8 @@ interface IConnectionFactory
      *
      * @return PDO
      * @throws PDOException
+     * @throws InstantiationException
+     * @throws TypeError
      */
     public function get(): PDO;
 }
