@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\connection;
 
+use DomainException;
 use gordon\pdowrapper\interface\factory\IConnectionFactory;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
@@ -121,12 +122,12 @@ class ConnectionManager implements LoggerAwareInterface
      * @param int $attribute
      * @param mixed $value
      * @return bool
-     * @throws ValueError
+     * @throws DomainException
      */
     public function setAttribute(int $attribute, mixed $value): bool
     {
         if (isset(self::FIXED_ATTRIBS[$attribute])) {
-            throw new ValueError("You cannot override attribute $attribute");
+            throw new DomainException("You cannot override attribute $attribute");
         }
 
         $this->attributes[$attribute] = $value;
