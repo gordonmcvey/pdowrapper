@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace gordon\pdowrapper;
+namespace gordon\pdowrapper\connection;
 
 use gordon\pdowrapper\dsn\DSN;
 use PDO;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\factory;
 
-use gordon\pdowrapper\ConnectionSpec;
+use gordon\pdowrapper\connection\ConnectionSpec;
 use gordon\pdowrapper\exception\ConnectionAttemptsExceededException;
 use gordon\pdowrapper\interface\backoff\IBackoffStrategy;
 use PDO;

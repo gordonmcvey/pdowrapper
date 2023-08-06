@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper;
 
+use gordon\pdowrapper\connection\ConnectionManager;
 use gordon\pdowrapper\exception\PDOException;
 use Iterator;
-use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Internal\TentativeType;
 use PDO;
 use PDOException as BasePDOException;
 use PDOStatement as RealPDOStatement;

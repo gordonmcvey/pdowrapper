@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper;
 
+use gordon\pdowrapper\connection\ConnectionManager;
 use gordon\pdowrapper\exception\PDOException;
 use gordon\pdowrapper\interface\factory\IStatementFactory;
 use PDO as RealPDO;
