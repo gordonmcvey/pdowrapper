@@ -6,7 +6,9 @@ namespace gordon\pdowrapper\factory;
 
 use gordon\pdowrapper\connection\ConnectionSpec;
 use gordon\pdowrapper\exception\ConnectionAttemptsExceededException;
+use gordon\pdowrapper\exception\InstantiationException;
 use gordon\pdowrapper\interface\backoff\IBackoffStrategy;
+use LogicException;
 use PDO;
 use PDOException;
 
@@ -28,37 +30,46 @@ class RetryableConnectionFactory extends ConnectionFactory
     public function get(): PDO
     {
         $attempt = 1;
+        $connection = null;
 
-        while (true) {
-            $this->logger?->debug(sprintf("%s: Connection attempt %d of %d", __METHOD__, $attempt, $this->maxAttempts));
-            try {
-                // The return will escape the loop
-                $connection = parent::get();
-                $this->logger?->debug(sprintf("%s: Connection established after %d attempt(s)", __METHOD__, $attempt));
-                return $connection;
-            } catch (PDOException $ex) {
-                // If the error in the exception indicates a temporary failure (such as "no route to host", "connection
-                // timeout", etc.) then trigger the retry logic.  Otherwise, abandon any further connection attempts
-                if (!$this->isRecoverable($ex)) {
-                    throw $ex;
+        try {
+            while (null === $connection) {
+                $this->logger?->debug(sprintf(
+                    "%s: Connection attempt %d of %d",
+                    __METHOD__,
+                    $attempt,
+                    $this->maxAttempts
+                ));
+                try {
+                    // The return will escape the loop
+                    $connection = parent::get();
+                } catch (InstantiationException $e) {
+                    // If the error in the exception doesn't indicate a temporary failure (such as "no route to host",
+                    // "connection timeout", etc.) or we've hit the retry limit then we cannot retry the connection
+                    if (!$this->isRecoverable($e) || $attempt >= $this->maxAttempts) {
+                        throw $e;
+                    }
+
+                    // Sleep for a number of microseconds specified by the backoff strategy before making another
+                    // connection attempt
+                    $backoff = $this->backoffStrategy->backoff();
+                    $this->logger?->debug(sprintf("Retrying in %0.3f second(s)", $backoff / 1000000));
+                    usleep($backoff);
+                    ++$attempt;
                 }
-
-                // Increment attempt counter and bail out if retry limit exceeded
-                if (++$attempt > $this->maxAttempts) {
-                    throw new ConnectionAttemptsExceededException(
-                        sprintf("Failed to establish connection after %d attempt(s)", $attempt),
-                        $ex->getCode(),
-                        $ex
-                    );
-                }
-
-                // Sleep for a number of microseconds specified by the backoff strategy before making another connection
-                // attempt
-                $backoff = $this->backoffStrategy->backoff();
-                $this->logger?->debug(sprintf("Retrying in %0.5d second(s)", $backoff / 1000000));
-                usleep($backoff);
             }
+        } catch (InstantiationException $e) {
+            // If we've hit the maximum attempt limit then throw the appropriate exception
+            throw new ConnectionAttemptsExceededException(
+                sprintf("Failed to establish connection after %d attempt(s)", $attempt),
+                $e->getCode(),
+                $e
+            );
         }
+
+        // Instantiation successful
+        $this->logger?->debug(sprintf("%s: Connection established after %d attempt(s)", __METHOD__, $attempt));
+        return $connection;
     }
 
     /**
