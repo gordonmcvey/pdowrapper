@@ -37,7 +37,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "gordon\\pdowrapper\\tests\\unit\\": "tests/unit/gordon/pdowrapper"
+      "gordon\\pdowrapper\\tests\\unit\\": "tests/unit/gordon/pdowrapper",
+      "gordon\\pdowrapper\\tests\\helpers\\": "tests/helpers/gordon/pdowrapper"
     }
   },
   "scripts": {
