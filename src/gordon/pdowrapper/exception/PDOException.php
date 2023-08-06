@@ -19,7 +19,7 @@ class PDOException extends BasePDOException
      * @inheritDoc
      * @param IErrorCodeEnum|null $errorCodeEnum An instance of the ErrorCodeEnum that represents the detected error
      */
-    public function __construct(
+    final public function __construct(
         string                          $message = "",
         int|string                      $code = 0,
         ?Throwable                      $previous = null,
@@ -49,17 +49,17 @@ class PDOException extends BasePDOException
      * Factory method for building an exception instance from a generic PDOException
      *
      * @param BasePDOException $e
-     * @return PDOException
+     * @return static
      * @todo Populate $errorCodeEnum
      */
-    public static function fromException(BasePDOException $e): PDOException
+    public static function fromException(BasePDOException $e): static
     {
         // If the passed exception is already a PDOWrapper exception then just rethrow to avoid a possible infinite loop
-        if ($e instanceof self) {
+        if ($e instanceof static) {
             return $e;
         }
 
-        $newE = new self(message: $e->getMessage(), code: $e->getCode(), previous: $e);
+        $newE = new static(message: $e->getMessage(), code: $e->getCode(), previous: $e);
         // It's weird that PHP lets us do this, but it does at least mean we can make sure our subclass behaves exactly
         // like the superclass when used as such
         $newE->errorInfo = $e->errorInfo;
