@@ -9,6 +9,7 @@ use gordon\pdowrapper\interface\factory\IConnectionFactory;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use TypeError;
 
 /**
  *
@@ -38,7 +39,12 @@ class ConnectionFactory implements IConnectionFactory, LoggerAwareInterface
             $this->spec->options
         );
 
-        if ($pdo instanceof LoggerAwareInterface) {
+        // Protection against instantiating a non-PDO class
+        if (!$pdo instanceof PDO) {
+            throw new TypeError(sprintf("Object of class %s is not an instance of PDO", $pdo::class));
+        }
+
+        if (null !== $this->logger && $pdo instanceof LoggerAwareInterface) {
             $pdo->setLogger($this->logger);
         }
 
