@@ -9,7 +9,6 @@ use gordon\pdowrapper\interface\factory\IConnectionFactory;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use ValueError;
 
 /**
  * Class ConnectionManager
@@ -54,7 +53,7 @@ class ConnectionManager implements LoggerAwareInterface
     private array $attributes;
 
     /**
-     * @param IConnectionFactory $connectionFactory The class that will handle PDO instantiation
+     * @param IConnectionFactory $connectionFactory The factory that will handle PDO instantiation
      */
     public function __construct(private readonly IConnectionFactory $connectionFactory)
     {
@@ -140,6 +139,11 @@ class ConnectionManager implements LoggerAwareInterface
      */
     public function getAttribute(int $attribute): mixed
     {
+        // If we're connected then ensure our local cache reflects the reality of the connection's attributes
+        if (!isset($this->attributes[$attribute]) && $this->connection) {
+            $this->attributes[$attribute] = $this->connection->getAttribute($attribute);
+        }
+
         return $this->connection?->getAttribute($attribute) ?? $this->attributes[$attribute] ?? null;
     }
 
