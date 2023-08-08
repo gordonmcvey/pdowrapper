@@ -42,14 +42,14 @@
     }
   },
   "scripts": {
-    "unittest": "vendor/bin/phpunit",
+    "unittest": "vendor/bin/phpunit ./tests/unit",
     "phpcs": "vendor/bin/phpcs",
-    "lint": "vendor/bin/phplint --exclude=vendor --extensions=php ",
+    "lint": "vendor/bin/phplint -c ./phplint.yaml.dist",
     "static": "vendor/bin/phpstan",
     "all": [
-      "@unittest ./tests/unit",
+      "@unittest",
       "@phpcs",
-      "@lint ./src",
+      "@lint",
       "@static"
     ]
   }
