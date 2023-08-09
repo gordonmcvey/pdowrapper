@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace gordon\pdowrapper\factory;
 
 use gordon\pdowrapper\connection\ConnectionSpec;
+use gordon\pdowrapper\errorcode\factory\ErrorCodeFactory;
 use gordon\pdowrapper\exception\ConnectionAttemptsExceededException;
 use gordon\pdowrapper\exception\InstantiationException;
 use gordon\pdowrapper\interface\backoff\IBackoffStrategy;
@@ -79,12 +80,14 @@ class RetryableConnectionFactory extends ConnectionFactory
      * re-trying the connection (such as a network error), or is an error that cannot be recovered from without
      * intervention (like incorrect login credentials, etc)
      *
-     * @param PDOException $ex
+     * @param InstantiationException $e
      * @return bool
      */
-    private function isRecoverable(PDOException $ex): bool
+    private function isRecoverable(InstantiationException $e): bool
     {
         // @todo Put logic to distinguish recoverable from fatal exceptions here
-        return true;
+        $code = (new ErrorCodeFactory("mysql"))->fromException($e);
+        return isset($code::RECONNECTABLE[$code->value]);
+//        return true;
     }
 }

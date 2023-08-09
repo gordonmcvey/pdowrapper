@@ -13,6 +13,10 @@ use gordon\pdowrapper\interface\errorcode\mysql\IErrorCodeEnum;
  */
 enum ClientError: string implements IErrorCodeEnum
 {
+    public const RECONNECTABLE = [
+        self::CR_CONNECTION_ERROR->value => self::CR_CONNECTION_ERROR->value,
+    ];
+
     case CR_UNKNOWN_ERROR                         = "2000";
     case CR_SOCKET_CREATE_ERROR                   = "2001";
     case CR_CONNECTION_ERROR                      = "2002";

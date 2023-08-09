@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace gordon\pdowrapper;
+namespace gordon\pdowrapper\transaction;
+
+use gordon\pdowrapper\PDOStatement;
 
 /**
  * Problems that this has to solve:
