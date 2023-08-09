@@ -42,7 +42,7 @@
     }
   },
   "scripts": {
-    "unittest": "vendor/bin/phpunit ./tests/unit",
+    "unittest": "vendor/bin/phpunit",
     "phpcs": "vendor/bin/phpcs",
     "lint": "vendor/bin/phplint -c ./phplint.yaml.dist",
     "static": "vendor/bin/phpstan",
