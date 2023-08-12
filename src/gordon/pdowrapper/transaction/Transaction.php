@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\transaction;
 
-use gordon\pdowrapper\PDOStatement;
+use gordon\pdowrapper\interface\transaction\ITransaction;
+use gordon\pdowrapper\interface\transaction\IVerb;
 
 /**
  * Problems that this has to solve:
@@ -21,31 +22,31 @@ use gordon\pdowrapper\PDOStatement;
  *   don't support transactions).  This may be a bit too much of a stretch though, and we probably should just rely on
  *   the developer using this to know what they can and can't run inside a transaction
  *
- * @package gordon\pdowrapper
+ * @package gordon\pdowrapper\transaction
  * @license https://www.apache.org/licenses/LICENSE-2.0
  */
-class Transaction
+class Transaction implements ITransaction
 {
     /**
-     * @var array<PDOStatement>
+     * @var array<IVerb>
      */
-    private array $queries = [];
+    private array $commands = [];
 
     /**
-     * @param PDOStatement $statement
+     * @param IVerb $command
      * @return $this
      */
-    public function add(PDOStatement $statement): static
+    public function add(IVerb $command): static
     {
-        $this->queries[] = $statement;
+        $this->commands[] = $command;
         return $this;
     }
 
-//    public function run(): static
-//    {
-//        foreach ($this->queries as $query) {
-//
-//        }
-//        return $this;
-//    }
+    public function run(): static
+    {
+        foreach ($this->commands as $command) {
+            $command->exec();
+        }
+        return $this;
+    }
 }
