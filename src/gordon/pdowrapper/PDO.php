@@ -13,7 +13,6 @@ use gordon\pdowrapper\transaction\Transaction;
 use gordon\pdowrapper\transaction\VerbFactory;
 use PDO as RealPDO;
 use PDOException as RealPDOException;
-use PDOStatement;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use ValueError;
