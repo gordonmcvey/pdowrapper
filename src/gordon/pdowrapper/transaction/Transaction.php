@@ -6,6 +6,7 @@ namespace gordon\pdowrapper\transaction;
 
 use gordon\pdowrapper\interface\transaction\ITransaction;
 use gordon\pdowrapper\interface\transaction\IVerb;
+use gordon\pdowrapper\PDOStatement;
 
 /**
  * Problems that this has to solve:
@@ -32,21 +33,37 @@ class Transaction implements ITransaction
      */
     private array $commands = [];
 
+    public function __construct(private readonly VerbFactory $verbFactory)
+    {
+    }
+
     /**
-     * @param IVerb $command
+     * @param PDOStatement $command
      * @return $this
      */
-    public function add(IVerb $command): static
+    public function add(PDOStatement $command): static
     {
-        $this->commands[] = $command;
+        $this->commands[] = $this->verbFactory->get($command);
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function run(): static
     {
         foreach ($this->commands as $command) {
             $command->exec();
         }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function clear(): static
+    {
+        $this->commands = [];
         return $this;
     }
 }
