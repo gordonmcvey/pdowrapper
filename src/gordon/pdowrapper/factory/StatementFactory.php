@@ -27,7 +27,7 @@ class StatementFactory implements LoggerAwareInterface, IStatementFactory
     /**
      * @inheritDoc
      */
-    public function prepare(string $query, array $options = []): \PDOStatement
+    public function prepare(string $query, array $options = []): PDOStatement
     {
         $this->logger?->debug(sprintf("%s Preparing query: '%.32s'", __METHOD__, $query));
         $stmt = new PDOStatement($this->connectionManager, $query, $options);

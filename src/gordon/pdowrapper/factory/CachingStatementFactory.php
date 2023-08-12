@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\factory;
 
-use PDOStatement;
+use gordon\pdowrapper\PDOStatement;
 
 /**
  * CachingStatementFactory class
