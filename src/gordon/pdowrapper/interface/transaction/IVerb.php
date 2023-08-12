@@ -6,5 +6,5 @@ namespace gordon\pdowrapper\interface\transaction;
 
 interface IVerb
 {
-
+    public function exec(): static;
 }

@@ -6,8 +6,9 @@ namespace gordon\pdowrapper\interface\transaction;
 
 /**
  *
+ * @package gordon\pdowrapper\interface\transaction
  * @license https://www.apache.org/licenses/LICENSE-2.0
  */
-interface IReader extends IVerb
+interface ITransaction
 {
 }
