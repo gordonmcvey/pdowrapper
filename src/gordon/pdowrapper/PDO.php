@@ -9,8 +9,6 @@ namespace gordon\pdowrapper;
 use gordon\pdowrapper\connection\ConnectionManager;
 use gordon\pdowrapper\exception\PDOException;
 use gordon\pdowrapper\interface\factory\IStatementFactory;
-use gordon\pdowrapper\transaction\Transaction;
-use gordon\pdowrapper\transaction\VerbFactory;
 use PDO as RealPDO;
 use PDOException as RealPDOException;
 use Psr\Log\LoggerAwareInterface;
@@ -31,8 +29,6 @@ class PDO extends RealPDO implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    private ?Transaction $currentTransaction = null;
-
     /**
      * @param ConnectionManager $connectionManager
      * @param IStatementFactory $statementFactory
@@ -49,11 +45,10 @@ class PDO extends RealPDO implements LoggerAwareInterface
      * @throws PDOException
      * @throws ValueError
      */
-    public function query($query, $fetchMode = null, ...$fetch_mode_args): \gordon\pdowrapper\PDOStatement
+    public function query($query, $fetchMode = null, ...$fetch_mode_args): PDOStatement
     {
         $preparedStatement = $this->prepare($query);
         $preparedStatement->setFetchMode($fetchMode ?? RealPDO::FETCH_DEFAULT, ...$fetch_mode_args);
-        $this->currentTransaction?->add(VerbFactory::get($preparedStatement));
         $preparedStatement->execute();
         return $preparedStatement;
     }
@@ -88,7 +83,7 @@ class PDO extends RealPDO implements LoggerAwareInterface
      * @throws ValueError
      * @phpstan-ignore-next-line
      */
-    public function prepare(string $query, array $options = []): \gordon\pdowrapper\PDOStatement
+    public function prepare(string $query, array $options = []): PDOStatement
     {
         return $this->statementFactory->prepare($query, $options);
     }
@@ -100,14 +95,10 @@ class PDO extends RealPDO implements LoggerAwareInterface
     public function beginTransaction(): bool
     {
         try {
-            $success = $this->connectionManager->getConnection()->beginTransaction();
+            return $this->connectionManager->getConnection()->beginTransaction();
         } catch (RealPDOException $e) {
             throw PDOException::fromException($e);
         }
-        if ($success) {
-            $this->currentTransaction = new Transaction();
-        }
-        return $success;
     }
 
     /**
@@ -118,12 +109,10 @@ class PDO extends RealPDO implements LoggerAwareInterface
     public function commit(): bool
     {
         try {
-            $success = $this->connectionManager->getConnection()->commit();
+            return $this->connectionManager->getConnection()->commit();
         } catch (RealPDOException $e) {
             throw PDOException::fromException($e);
         }
-        $this->currentTransaction = null;
-        return $success;
     }
 
     /**
@@ -133,12 +122,10 @@ class PDO extends RealPDO implements LoggerAwareInterface
     public function rollBack(): bool
     {
         try {
-            $success = $this->connectionManager->getConnection()->rollBack();
+            return $this->connectionManager->getConnection()->rollBack();
         } catch (RealPDOException $e) {
             throw PDOException::fromException($e);
         }
-        $this->currentTransaction = null;
-        return $success;
     }
 
     /**
