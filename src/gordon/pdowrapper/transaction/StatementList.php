@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\transaction;
 
-use gordon\pdowrapper\interface\transaction\ITransaction;
+use gordon\pdowrapper\interface\transaction\IStatementList;
 use gordon\pdowrapper\interface\transaction\IVerb;
 use gordon\pdowrapper\PDOStatement;
 
 /**
  * Problems that this has to solve:
  *
- * * Maintain list of queries that have been/weil be executed as part of a transaction
+ * * Maintain list of queries that have been/will be executed as part of a transaction
  * * Remember the last query executed
  * * Allow for the entire collection of queries to be run as an atomic unit on the database server
  *     * Management of dependencies between queries (If query B depends on the result of query A then the result of
@@ -26,7 +26,7 @@ use gordon\pdowrapper\PDOStatement;
  * @package gordon\pdowrapper\transaction
  * @license https://www.apache.org/licenses/LICENSE-2.0
  */
-class Transaction implements ITransaction
+class StatementList implements IStatementList
 {
     /**
      * @var array<IVerb>
@@ -63,6 +63,12 @@ class Transaction implements ITransaction
      */
     public function clear(): static
     {
+        array_map(
+            function (IVerb $cmd) {
+                echo get_class($cmd) . "\n";
+            },
+            $this->commands
+        );
         $this->commands = [];
         return $this;
     }
