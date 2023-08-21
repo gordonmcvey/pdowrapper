@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace gordon\pdowrapper;
+namespace gordon\pdowrapper\debug;
 
 use PDO;
 use PDOStatement;
@@ -13,12 +13,12 @@ use Psr\Log\LoggerAwareTrait;
  * Class LoggingPDO
  *
  * NOTE: This class isn't really intended for production, it's largely intended for debugging at which point the wrapper
- * is calling methods on an actual PDO connection and when the connection is garbage collected.
+ * is calling methods on an actual PDO connection and when the connection is garbage-collected.
  *
  * @package gordon\pdowrapper
  * @license https://www.apache.org/licenses/LICENSE-2.0
  */
-class LoggingPDO extends \PDO implements LoggerAwareInterface
+class LoggingPDO extends PDO implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
