@@ -90,10 +90,10 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
      */
     private array $boundValues = [];
 
-    /**
-     * @var object|string|null
-     */
-    private string|object|null $fetchClassName = null;
+//    /**
+//     * @var object|string|null
+//     */
+//    private string|object|null $fetchClassName = null;
 
     /**
      * @param ConnectionManager $connectionManager Must return a \PDO instance and not a wrapper
@@ -179,7 +179,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
         int|string $column,
         mixed &$var,
         int $type = PDO::PARAM_STR,
-        int $maxLength = null,
+        int $maxLength = 0,
         mixed $driverOptions = null
     ): bool {
         $this->boundColumns[$column] = [
@@ -320,8 +320,8 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     {
         $this->fetchMode = $mode;
         $this->fetchParams = $params;
-        $this->fetchClassName = $className;
-        $this->statement?->setFetchMode($this->fetchMode, $this->fetchClassName, ...$this->fetchParams);
+//        $this->fetchClassName = $className;
+        $this->statement?->setFetchMode($this->fetchMode, /*$this->fetchClassName,*/ ...$this->fetchParams);
     }
 
     /**
@@ -383,7 +383,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
             $statement = $this->connectionManager->getConnection()->prepare($this->query, $this->options);
 
             // Ensure the generated statement has been properly configured
-            $statement->setFetchMode($this->fetchMode, $this->fetchClassName, ...$this->fetchParams);
+            $statement->setFetchMode($this->fetchMode, /*$this->fetchClassName,*/ ...$this->fetchParams);
             foreach ($this->attributes as $attrKey => $attrValue) {
                 $statement->setAttribute($attrKey, $attrValue);
             }
