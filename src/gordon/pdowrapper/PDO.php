@@ -48,7 +48,9 @@ class PDO extends RealPDO implements LoggerAwareInterface
     public function query($query, $fetchMode = null, ...$fetch_mode_args): PDOStatement
     {
         $preparedStatement = $this->prepare($query);
-        $preparedStatement->setFetchMode($fetchMode ?? RealPDO::FETCH_DEFAULT, ...$fetch_mode_args);
+        if (null !== $fetchMode) {
+            $preparedStatement->setFetchMode($fetchMode, ...$fetch_mode_args);
+        }
         $preparedStatement->execute();
         return $preparedStatement;
     }
