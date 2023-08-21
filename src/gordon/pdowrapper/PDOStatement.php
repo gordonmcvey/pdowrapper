@@ -155,7 +155,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
         int|string $param,
         mixed &$var,
         int $type = PDO::PARAM_STR,
-        int $maxLength = null,
+        int $maxLength = 0,
         mixed $driverOptions = null
     ): bool {
         $this->boundParams[$param]  = [
