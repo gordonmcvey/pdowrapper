@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper;
 
-use gordon\pdowrapper\connection\ConnectionManager;
 use gordon\pdowrapper\exception\PDOException;
+use gordon\pdowrapper\interface\connection\IConnectionManager;
 use Iterator;
 use PDO;
 use PDOException as BasePDOException;
@@ -96,14 +96,14 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
 //    private string|object|null $fetchClassName = null;
 
     /**
-     * @param ConnectionManager $connectionManager Must return a \PDO instance and not a wrapper
+     * @param IConnectionManager $connectionManager Must return a \PDO instance and not a wrapper
      * @param string $query The query that will be prepared when instantiating the proxied statement
      * @param array<PDO::ATTR_*, int> $options The options that will be used when instantiating the proxied statement
      */
     public function __construct(
-        private readonly ConnectionManager $connectionManager,
-        public readonly string             $query,
-        private readonly array             $options = []
+        private readonly IConnectionManager $connectionManager,
+        public readonly string              $query,
+        private readonly array              $options = []
     ) {
         // Emulate the behaviour of PDO::prepare() if called with an empty query string
         if (empty($query)) {

@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper;
 
-use gordon\pdowrapper\connection\ConnectionManager;
 use gordon\pdowrapper\exception\PDOException;
+use gordon\pdowrapper\interface\connection\IConnectionManager;
 use gordon\pdowrapper\interface\factory\IStatementFactory;
 use PDO as RealPDO;
 use PDOException as RealPDOException;
@@ -30,12 +30,12 @@ class PDO extends RealPDO implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * @param ConnectionManager $connectionManager
+     * @param IConnectionManager $connectionManager
      * @param IStatementFactory $statementFactory
      * @noinspection PhpMissingParentConstructorInspection
      */
     public function __construct(
-        private readonly ConnectionManager $connectionManager,
+        private readonly IConnectionManager $connectionManager,
         private readonly IStatementFactory $statementFactory
     ) {
     }
