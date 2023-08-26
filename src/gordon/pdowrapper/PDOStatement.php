@@ -90,11 +90,6 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
      */
     private array $boundValues = [];
 
-//    /**
-//     * @var object|string|null
-//     */
-//    private string|object|null $fetchClassName = null;
-
     /**
      * @param IConnectionManager $connectionManager Must return a \PDO instance and not a wrapper
      * @param string $query The query that will be prepared when instantiating the proxied statement
@@ -320,8 +315,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     {
         $this->fetchMode = $mode;
         $this->fetchParams = $params;
-//        $this->fetchClassName = $className;
-        $this->statement?->setFetchMode($this->fetchMode, /*$this->fetchClassName,*/ ...$this->fetchParams);
+        $this->statement?->setFetchMode($this->fetchMode, ...$this->fetchParams);
     }
 
     /**
@@ -383,7 +377,8 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
             $statement = $this->connectionManager->getConnection()->prepare($this->query, $this->options);
 
             // Ensure the generated statement has been properly configured
-            $statement->setFetchMode($this->fetchMode, /*$this->fetchClassName,*/ ...$this->fetchParams);
+            $statement->setFetchMode($this->fetchMode, ...$this->fetchParams);
+
             foreach ($this->attributes as $attrKey => $attrValue) {
                 $statement->setAttribute($attrKey, $attrValue);
             }
