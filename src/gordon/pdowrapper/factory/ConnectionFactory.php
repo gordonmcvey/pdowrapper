@@ -6,9 +6,9 @@ namespace gordon\pdowrapper\factory;
 
 use gordon\pdowrapper\connection\ConnectionSpec;
 use gordon\pdowrapper\exception\InstantiationException;
-use gordon\pdowrapper\exception\PDOException;
 use gordon\pdowrapper\interface\factory\IConnectionFactory;
 use PDO;
+use PDOException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TypeError;
@@ -41,7 +41,7 @@ class ConnectionFactory implements IConnectionFactory, LoggerAwareInterface
                 $this->spec->password,
                 $this->spec->options
             );
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw InstantiationException::fromException($e);
         }
 
@@ -50,9 +50,10 @@ class ConnectionFactory implements IConnectionFactory, LoggerAwareInterface
             throw new TypeError(sprintf("Object of class %s is not an instance of PDO", $pdo::class));
         }
 
-        if (null !== $this->logger && $pdo instanceof LoggerAwareInterface) {
-            $pdo->setLogger($this->logger);
-        }
+        // Set logger if supported
+        null !== $this->logger
+            && $pdo instanceof LoggerAwareInterface
+            && $pdo->setLogger($this->logger);
 
         return $pdo;
     }

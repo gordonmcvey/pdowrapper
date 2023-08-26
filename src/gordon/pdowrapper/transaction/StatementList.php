@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\transaction;
 
-use gordon\pdowrapper\interface\transaction\ITransaction;
+use gordon\pdowrapper\interface\transaction\IStatementList;
 use gordon\pdowrapper\interface\transaction\IVerb;
+use gordon\pdowrapper\PDOStatement;
 
 /**
  * Problems that this has to solve:
  *
- * * Maintain list of queries that have been/weil be executed as part of a transaction
+ * * Maintain list of queries that have been/will be executed as part of a transaction
  * * Remember the last query executed
  * * Allow for the entire collection of queries to be run as an atomic unit on the database server
  *     * Management of dependencies between queries (If query B depends on the result of query A then the result of
@@ -25,28 +26,50 @@ use gordon\pdowrapper\interface\transaction\IVerb;
  * @package gordon\pdowrapper\transaction
  * @license https://www.apache.org/licenses/LICENSE-2.0
  */
-class Transaction implements ITransaction
+class StatementList implements IStatementList
 {
     /**
      * @var array<IVerb>
      */
     private array $commands = [];
 
+    public function __construct(private readonly VerbFactory $verbFactory)
+    {
+    }
+
     /**
-     * @param IVerb $command
+     * @param PDOStatement $command
      * @return $this
      */
-    public function add(IVerb $command): static
+    public function add(PDOStatement $command): static
     {
-        $this->commands[] = $command;
+        $this->commands[] = $this->verbFactory->get($command);
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function run(): static
     {
         foreach ($this->commands as $command) {
             $command->exec();
         }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function clear(): static
+    {
+        array_map(
+            function (IVerb $cmd) {
+                echo get_class($cmd) . "\n";
+            },
+            $this->commands
+        );
+        $this->commands = [];
         return $this;
     }
 }

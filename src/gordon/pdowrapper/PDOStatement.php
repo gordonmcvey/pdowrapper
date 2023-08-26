@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper;
 
-use gordon\pdowrapper\connection\ConnectionManager;
 use gordon\pdowrapper\exception\PDOException;
+use gordon\pdowrapper\interface\connection\IConnectionManager;
 use Iterator;
 use PDO;
 use PDOException as BasePDOException;
 use PDOStatement as RealPDOStatement;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use stdClass;
 use ValueError;
 
 /**
  * Class PDOStatement
  *
- * This class serves as a proxy for PDOStatement.  This allows us to defer statement instantiation until its actually
- * executed.
+ * This class serves as a proxy for PDOStatement.  This allows us to defer statement instantiation until it's actually
+ * executed for the first time.
  *
  * @package gordon\pdowrapper
  * @license https://www.apache.org/licenses/LICENSE-2.0
@@ -90,17 +91,17 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     private array $boundValues = [];
 
     /**
-     * @param ConnectionManager $connectionManager Must return a \PDO instance and not a wrapper
+     * @param IConnectionManager $connectionManager Must return a \PDO instance and not a wrapper
      * @param string $query The query that will be prepared when instantiating the proxied statement
      * @param array<PDO::ATTR_*, int> $options The options that will be used when instantiating the proxied statement
      */
     public function __construct(
-        private readonly ConnectionManager $connectionManager,
-        public readonly string             $query,
-        private readonly array             $options = []
+        private readonly IConnectionManager $connectionManager,
+        public readonly string              $query,
+        private readonly array              $options = []
     ) {
         // Emulate the behaviour of PDO::prepare() if called with an empty query string
-        if (empty($this->query)) {
+        if (empty($query)) {
             throw new ValueError(__METHOD__ . "(): Argument #2 (\$query) cannot be empty");
         }
     }
@@ -112,6 +113,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
      */
     public function execute(?array $params = null): bool
     {
+        // @todo Add the statement and its params to the replay log if in a transaction
         if (null === $this->statement) {
             // It's time to instantiate the real PDOStatement
             $this->initStatement();
@@ -148,7 +150,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
         int|string $param,
         mixed &$var,
         int $type = PDO::PARAM_STR,
-        int $maxLength = null,
+        int $maxLength = 0,
         mixed $driverOptions = null
     ): bool {
         $this->boundParams[$param]  = [
@@ -172,7 +174,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
         int|string $column,
         mixed &$var,
         int $type = PDO::PARAM_STR,
-        int $maxLength = null,
+        int $maxLength = 0,
         mixed $driverOptions = null
     ): bool {
         $this->boundColumns[$column] = [
@@ -246,7 +248,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
     /**
      * @inheritDoc
      */
-    public function fetchObject(?string $class = "stdClass", array $constructorArgs = []): object|false
+    public function fetchObject(?string $class = stdClass::class, array $constructorArgs = []): object|false
     {
         try {
             return $this->statement?->fetchObject($class, $constructorArgs) ?? false;
@@ -376,6 +378,7 @@ class PDOStatement extends RealPDOStatement implements LoggerAwareInterface
 
             // Ensure the generated statement has been properly configured
             $statement->setFetchMode($this->fetchMode, ...$this->fetchParams);
+
             foreach ($this->attributes as $attrKey => $attrValue) {
                 $statement->setAttribute($attrKey, $attrValue);
             }

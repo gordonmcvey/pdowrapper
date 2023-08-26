@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace gordon\pdowrapper\connection;
 
 use DomainException;
+use gordon\pdowrapper\interface\connection\IConnectionManager;
 use gordon\pdowrapper\interface\factory\IConnectionFactory;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
@@ -18,7 +19,7 @@ use Psr\Log\LoggerAwareTrait;
  * @package gordon\pdowrapper
  * @license https://www.apache.org/licenses/LICENSE-2.0
  */
-class ConnectionManager implements LoggerAwareInterface
+class ConnectionManager implements IConnectionManager, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -61,10 +62,7 @@ class ConnectionManager implements LoggerAwareInterface
     }
 
     /**
-     * Return the PDO object that's actually communicating with the database, or instantiate it if the connection is not
-     * established
-     *
-     * @return PDO
+     * @inheritDoc
      */
     public function getConnection(): PDO
     {
@@ -77,10 +75,7 @@ class ConnectionManager implements LoggerAwareInterface
     }
 
     /**
-     * Return the PDO object that's actually communicating with the database, or null it if the connection is not
-     * established
-     *
-     * @return PDO|null
+     * @inheritDoc
      */
     public function getConnectionIfConnected(): ?PDO
     {
@@ -88,14 +83,12 @@ class ConnectionManager implements LoggerAwareInterface
     }
 
     /**
-     * Expire the currently opened connection
-     *
      * NOTE: Due to the way the underlying PDO classes work, calling this method is not guaranteed to cause the
      * connection that the connection manager's PDO instance represents to close.  It merely unsets the reference to
      * the instance itself.  If there are still PDOStatements that were prepared from this PDO instance in scope then
      * these statements will hold the connection open until they are unset too.
      *
-     * @return $this
+     * @inheritDoc
      */
     public function expireConnection(): self
     {
@@ -104,13 +97,11 @@ class ConnectionManager implements LoggerAwareInterface
     }
 
     /**
-     * Check if the connection manager's PDO object is active
-     *
      * NOTE: A false is not an explicit guarantee that the connection established by this connection manager isn't still
      * active.  Due to how PDO is implemented the connection remains open so long as there are PDOStatement objects
      * in scope, even if the PDO instance itself has gone out of scope and would otherwise be GC'd.
      *
-     * @return bool
+     * @inheritDoc
      */
     public function isConnected(): bool
     {
@@ -118,9 +109,7 @@ class ConnectionManager implements LoggerAwareInterface
     }
 
     /**
-     * @param int $attribute
-     * @param mixed $value
-     * @return bool
+     * @inheritDoc
      * @throws DomainException
      */
     public function setAttribute(int $attribute, mixed $value): bool
@@ -134,8 +123,7 @@ class ConnectionManager implements LoggerAwareInterface
     }
 
     /**
-     * @param int $attribute
-     * @return mixed
+     * @inheritDoc
      */
     public function getAttribute(int $attribute): mixed
     {

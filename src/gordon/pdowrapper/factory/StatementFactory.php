@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace gordon\pdowrapper\factory;
 
-use gordon\pdowrapper\connection\ConnectionManager;
+use gordon\pdowrapper\interface\connection\IConnectionManager;
 use gordon\pdowrapper\interface\factory\IStatementFactory;
 use gordon\pdowrapper\PDOStatement;
 use Psr\Log\LoggerAwareInterface;
@@ -20,7 +20,7 @@ class StatementFactory implements LoggerAwareInterface, IStatementFactory
     use LoggerAwareTrait;
 
     public function __construct(
-        private readonly ConnectionManager $connectionManager
+        private readonly IConnectionManager $connectionManager
     ) {
     }
 
